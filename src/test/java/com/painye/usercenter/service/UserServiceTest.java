@@ -45,9 +45,9 @@ public class UserServiceTest {
 
     @Test
     public void testUserRegister(){
-        String userAccount = "t2";
-        String password = "123456";
-        String checkPassword = "123456";
+        String userAccount = "t1234";
+        String password = "12345678";
+        String checkPassword = "12345678";
         Long l = 0L;
         try {
             l = userService.userRegister(userAccount, password, checkPassword);
