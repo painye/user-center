@@ -7,6 +7,8 @@ import com.painye.usercenter.service.UserService;
 import com.painye.usercenter.mapper.UserMapper;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -24,37 +26,38 @@ import com.painye.usercenter.constants.Constant;
 public class  UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
 
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private UserMapper userMapper;
 
     @Override
-    public Long userRegister(String userAccount, String userPassword, String checkPassword) {
+    public Long userRegister(String userAccount, String userPassword, String checkPassword) throws Exception{
         //1. 校验用户的账户、密码、校验密码是否符合要求
         //  a. 非空
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)){
-            return -1L;
+            throw new Exception("账号、密码和校验密码为空！");
         }
         //b. 账户不小于4位,c. 密码不小于8位
         if (userAccount.length()< 4 || userPassword.length() <8) {
-            return -1L;
+            throw new Exception("账号长度小于4位，密码不小于8位！");
         }
         //  e. 账户不包含特殊字符
         String validPattern = "\\pP|\\PS|\\s+";
         Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
         if (matcher.find()) {
-            return -1L;
+            throw new Exception("账户包含特殊字符！");
         }
         //  f. 密码和校验密码相同
         if (!userPassword.equals(checkPassword)) {
-            return -1L;
+            throw new Exception("密码和校验密码不相同！");
         }
         //  d. 账户不能重复
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", userAccount);
         Long count = userMapper.selectCount(queryWrapper);
         if (count > 0) {
-            return -1L;
+            throw new Exception("账户重复！");
         }
         //2. 对密码进行加密
         String encryptPassword = DigestUtils.md5DigestAsHex((Constant.DIGEST_SALT+userPassword).getBytes());
@@ -64,8 +67,9 @@ public class  UserServiceImpl extends ServiceImpl<UserMapper, User>
         user.setUserPassword(encryptPassword);
         boolean result = this.save(user);
         if (!result) {
-            return -1L;
+            throw new Exception("插入用户数据失败");
         }
+        logger.info(String.format("数据库中添加用户{'%s'}成功！", userAccount));
         return user.getId();
     }
 }

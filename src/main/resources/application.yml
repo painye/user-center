@@ -11,3 +11,9 @@ mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: false
+
+logging:
+  file:
+    name: spring_log.log
+    path: ./logs
+  config: classpath:logback-spring-dev.xml

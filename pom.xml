@@ -52,6 +52,13 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+
+        <!--引入springboot自带的日志-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>

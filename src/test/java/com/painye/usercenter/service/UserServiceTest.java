@@ -4,7 +4,12 @@ import com.painye.usercenter.model.domain.User;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.servlet.View;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author pan
@@ -13,8 +18,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class UserServiceTest {
 
+    Logger log = Logger.getLogger(UserServiceTest.class.getName());
+
     @Resource
     private UserService userService;
+    @Autowired
+    private View error;
 
     @Test
     public void testAddUser(){
@@ -39,7 +48,12 @@ public class UserServiceTest {
         String userAccount = "t2";
         String password = "123456";
         String checkPassword = "123456";
-        Long l = userService.userRegister(userAccount, password, checkPassword);
+        Long l = 0L;
+        try {
+            l = userService.userRegister(userAccount, password, checkPassword);
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "用户注册失败！", e);
+        }
         System.out.println(l);
     }
 }
