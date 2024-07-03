@@ -33,4 +33,13 @@ public class UserServiceTest {
         boolean save = userService.save(user);
         Assertions.assertTrue(save);
     }
+
+    @Test
+    public void testUserRegister(){
+        String userAccount = "t2";
+        String password = "123456";
+        String checkPassword = "123456";
+        Long l = userService.userRegister(userAccount, password, checkPassword);
+        System.out.println(l);
+    }
 }
