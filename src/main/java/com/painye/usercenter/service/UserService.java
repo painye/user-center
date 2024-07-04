@@ -21,5 +21,5 @@ public interface UserService extends IService<User> {
      * @param checkPassword
      * @return 新用户id
      */
-    Long userRegister(String userAccount, String userPassword, String checkPassword) throws Exception;
+    Long userRegister(String userAccount, String userPassword, String checkPassword) throws Exception;   
 }

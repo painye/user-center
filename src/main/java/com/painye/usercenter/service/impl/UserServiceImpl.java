@@ -43,9 +43,9 @@ public class  UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new Exception("账号长度小于4位，密码不小于8位！");
         }
         //  e. 账户不包含特殊字符
-        String validPattern = "\\pP|\\PS|\\s+";
+        String validPattern = "[!@#$%^&*(),.?\":{}|<>~`\\\\/\\[\\]\\-_=+]";
         Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
-        if (!matcher.find()) {
+        if (matcher.find()) {
             throw new Exception("账户包含特殊字符！");
         }
         //  f. 密码和校验密码相同
