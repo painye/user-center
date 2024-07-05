@@ -88,4 +88,26 @@ public class User implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+
+    /**
+     * 脱敏用户信息
+     * @return
+     */
+    public User toSafetyUser() {
+        User safetyUser = new User();
+        safetyUser.setId(this.getId());
+        safetyUser.setUserName(this.getUserName());
+        safetyUser.setUserAccount(this.getUserAccount());
+        safetyUser.setAvatarUrl(this.getAvatarUrl());
+        safetyUser.setGender(this.getGender());
+        safetyUser.setPhone(this.getPhone());
+        safetyUser.setEmail(this.getEmail());
+        safetyUser.setUserStatus(this.getUserStatus());
+        safetyUser.setCreateTime(this.getCreateTime());
+        safetyUser.setUpdateTime(this.getUpdateTime());
+        safetyUser.setUserRole(this.getUserRole());
+        safetyUser.setPlanetCode(this.getPlanetCode());
+        return safetyUser;
+    }
 }

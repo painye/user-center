@@ -44,7 +44,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUserRegister(){
+    void userRegister(){
         String userAccount = "t1234";
         String password = "12345678";
         String checkPassword = "12345678";
@@ -55,5 +55,19 @@ public class UserServiceTest {
             log.log(Level.SEVERE, "用户注册失败！", e);
         }
         System.out.println(l);
+    }
+
+
+    @Test
+    void doLogin() {
+        String userAccount = "t1234";
+        String password = "12345678";
+        User user = null;
+        try {
+            user = userService.doLogin(userAccount, password);
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "用户登录失败！", e);
+        }
+        System.out.println(user);
     }
 }

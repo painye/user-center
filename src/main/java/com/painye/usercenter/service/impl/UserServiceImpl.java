@@ -72,6 +72,40 @@ public class  UserServiceImpl extends ServiceImpl<UserMapper, User>
         logger.info(String.format("数据库中添加用户{'%s'}成功！", userAccount));
         return user.getId();
     }
+
+    @Override
+    public User doLogin(String userAccount, String userPassword) throws Exception {
+
+        //1. 校验用户的账户、密码是否符合要求
+        //  a. 非空
+        if (StringUtils.isAnyBlank(userAccount, userPassword)){
+            throw new Exception("账号、密码为空");
+        }
+        //b. 账户不小于4位,c. 密码不小于8位
+        if (userAccount.length()< 4 || userPassword.length() <8) {
+            throw new Exception("账号长度小于4位，密码不小于8位！");
+        }
+        //  e. 账户不包含特殊字符
+        String validPattern = "[!@#$%^&*(),.?\":{}|<>~`\\\\/\\[\\]\\-_=+]";
+        Matcher matcher = Pattern.compile(validPattern).matcher(userAccount);
+        if (matcher.find()) {
+            throw new Exception("账户包含特殊字符！");
+        }
+
+        //2、对密码做摘要用于和数据库中的信息比对
+        String encryptPassword = DigestUtils.md5DigestAsHex((Constant.DIGEST_SALT+userPassword).getBytes());
+
+        //3、查询数据库
+        QueryWrapper queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount", userAccount);
+        queryWrapper.eq("userPassword", encryptPassword);
+        User user = userMapper.selectOne(queryWrapper);
+        if (user == null) {
+            throw new Exception("没有匹配的账号和密码！！！");
+        }
+        return user.toSafetyUser();
+    }
+
 }
 
 
