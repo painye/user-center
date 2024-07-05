@@ -5,9 +5,9 @@ package com.painye.usercenter.constants;
  */
 
 /**
+ * @author pan
  * @ClassName : com.painye.usercenter.constants.Constant
  * @Description : 常数类
- * @author pan
  * @date 2024/7/3 8:40
  */
 public class Constant {

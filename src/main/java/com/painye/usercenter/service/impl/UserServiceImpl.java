@@ -18,13 +18,13 @@ import java.util.regex.Pattern;
 import com.painye.usercenter.constants.Constant;
 
 /**
-* @author dell
-* @description 针对表【user】的数据库操作Service实现
-* @createDate 2024-07-02 07:40:15
-*/
+ * @author dell
+ * @description 针对表【user】的数据库操作Service实现
+ * @createDate 2024-07-02 07:40:15
+ */
 @Service
-public class  UserServiceImpl extends ServiceImpl<UserMapper, User>
-    implements UserService{
+public class UserServiceImpl extends ServiceImpl<UserMapper, User>
+        implements UserService {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -32,14 +32,14 @@ public class  UserServiceImpl extends ServiceImpl<UserMapper, User>
     private UserMapper userMapper;
 
     @Override
-    public Long userRegister(String userAccount, String userPassword, String checkPassword) throws Exception{
+    public Long userRegister(String userAccount, String userPassword, String checkPassword) throws Exception {
         //1. 校验用户的账户、密码、校验密码是否符合要求
         //  a. 非空
-        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)){
+        if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
             throw new Exception("账号、密码和校验密码为空！");
         }
         //b. 账户不小于4位,c. 密码不小于8位
-        if (userAccount.length()< 4 || userPassword.length() <8) {
+        if (userAccount.length() < 4 || userPassword.length() < 8) {
             throw new Exception("账号长度小于4位，密码不小于8位！");
         }
         //  e. 账户不包含特殊字符
@@ -60,7 +60,7 @@ public class  UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new Exception("账户重复！");
         }
         //2. 对密码进行加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((Constant.DIGEST_SALT+userPassword).getBytes());
+        String encryptPassword = DigestUtils.md5DigestAsHex((Constant.DIGEST_SALT + userPassword).getBytes());
         //3. 向数据库中插入用户数据
         User user = new User();
         user.setUserAccount(userAccount);
@@ -78,11 +78,11 @@ public class  UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         //1. 校验用户的账户、密码是否符合要求
         //  a. 非空
-        if (StringUtils.isAnyBlank(userAccount, userPassword)){
+        if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new Exception("账号、密码为空");
         }
         //b. 账户不小于4位,c. 密码不小于8位
-        if (userAccount.length()< 4 || userPassword.length() <8) {
+        if (userAccount.length() < 4 || userPassword.length() < 8) {
             throw new Exception("账号长度小于4位，密码不小于8位！");
         }
         //  e. 账户不包含特殊字符
@@ -93,7 +93,7 @@ public class  UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         //2、对密码做摘要用于和数据库中的信息比对
-        String encryptPassword = DigestUtils.md5DigestAsHex((Constant.DIGEST_SALT+userPassword).getBytes());
+        String encryptPassword = DigestUtils.md5DigestAsHex((Constant.DIGEST_SALT + userPassword).getBytes());
 
         //3、查询数据库
         QueryWrapper queryWrapper = new QueryWrapper<>();
