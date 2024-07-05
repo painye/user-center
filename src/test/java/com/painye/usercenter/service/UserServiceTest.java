@@ -45,7 +45,7 @@ public class UserServiceTest {
 
     @Test
     void userRegister(){
-        String userAccount = "t1234";
+        String userAccount = "painye";
         String password = "12345678";
         String checkPassword = "12345678";
         Long l = 0L;
@@ -60,7 +60,7 @@ public class UserServiceTest {
 
     @Test
     void doLogin() {
-        String userAccount = "t1234";
+        String userAccount = "painye";
         String password = "12345678";
         User user = null;
         try {
