@@ -29,3 +29,5 @@ server:
   reactive:
     session:
       timeout: 10
+  servlet:
+    context-path: /api
