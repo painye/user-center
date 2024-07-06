@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @date 2024/7/6 8:35
  */
 @Data
-public class     UserRegisterRequest implements Serializable {
+public class UserRegisterRequest implements Serializable {
 
     @Size(min = 4, max = 50)
     private String userAccount;

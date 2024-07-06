@@ -18,4 +18,12 @@ public class Constant {
     public static final String DIGEST_SALT = "salt";
     
     public static final String LOGIN_USER_MESSAGE = "LOGIN_USER_MESSAGE";
+
+    /**
+     *响应------------------------------------------------
+     */
+
+    public static final String RESULT_STATUS_SUCCESS = "200";
+
+    public static final String RESULT_STATUS_FAIL =  "500";
 }

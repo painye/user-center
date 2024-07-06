@@ -1,10 +1,18 @@
 package com.painye.usercenter.controller;
+import com.painye.usercenter.constants.Constant;
+import com.painye.usercenter.model.domain.User;
+import com.painye.usercenter.model.dto.UserLoginRequest;
 import com.painye.usercenter.model.dto.UserRegisterRequest;
+import com.painye.usercenter.model.vo.UserResponse;
 import com.painye.usercenter.service.UserService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @ClassName : com.painye.usercenter.controller.UserController
@@ -23,14 +31,42 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/register")
-    public Long userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public UserResponse userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         Long userId = null;
+        UserResponse userResponse = new UserResponse();
         try {
             userId = userService.userRegister(userRegisterRequest.getUserAccount(), userRegisterRequest.getUserPassword(), userRegisterRequest.getCheckPassword());
+            userResponse.setResultStatus(Constant.RESULT_STATUS_SUCCESS);
+            userResponse.setResultMessage("用户注册成功！");
+            Map<String, Long> result = new HashMap<>();
+            result.put("userId", userId);
+            userResponse.setBody(result);
         } catch (Exception e) {
+            userResponse.setResultStatus(Constant.RESULT_STATUS_FAIL);
+            userResponse.setResultMessage("用户注册失败："+e.getMessage());
             log.error("用户初测失败："+e.getMessage(), e);
         }
-        return userId;
+        return userResponse;
     }
+
+    @PostMapping("/login")
+    public UserResponse userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+        User user = null;
+        UserResponse userResponse = new UserResponse();
+        try {
+            user = userService.doLogin(userLoginRequest.getUserAccount(), userLoginRequest.getUserPassword(), request);
+            userResponse.setResultStatus(Constant.RESULT_STATUS_SUCCESS);
+            userResponse.setResultMessage("用户登录成功！");
+            Map<String, User> result = new HashMap<>();
+            result.put("user", user);
+            userResponse.setBody(result);
+        } catch (Exception e) {
+            userResponse.setResultStatus(Constant.RESULT_STATUS_FAIL);
+            userResponse.setResultMessage("用户登录失败："+e.getMessage());
+            log.error("用户初测失败："+e.getMessage(), e);
+        }
+        return userResponse;
+    }
+
 
 }
