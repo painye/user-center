@@ -56,18 +56,4 @@ public class UserServiceTest {
         }
         System.out.println(l);
     }
-
-
-    @Test
-    void doLogin() {
-        String userAccount = "painye";
-        String password = "12345678";
-        User user = null;
-        try {
-            user = userService.doLogin(userAccount, password);
-        } catch (Exception e) {
-            log.log(Level.SEVERE, "用户登录失败！", e);
-        }
-        System.out.println(user);
-    }
 }

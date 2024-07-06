@@ -2,6 +2,7 @@ package com.painye.usercenter.service;
 
 import com.painye.usercenter.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @author dell
@@ -29,11 +30,13 @@ public interface UserService extends IService<User> {
      * 1、校验参数
      * 2、查库
      * 3、信息脱敏
+     * 4、将登录成功的用户信息保存在session之中
      *
      * @param userAccount
      * @param userPassword
-     * @return
+     * @param userPassword
+     * @return httpServletRequest
      * @throws Exception
      */
-    User doLogin(String userAccount, String userPassword) throws Exception;
+    User doLogin(String userAccount, String userPassword, HttpServletRequest httpServletRequest) throws Exception;
 }

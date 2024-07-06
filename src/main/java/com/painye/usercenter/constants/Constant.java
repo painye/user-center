@@ -16,4 +16,6 @@ public class Constant {
      * 加密用到的盐
      */
     public static final String DIGEST_SALT = "salt";
+    
+    public static final String LOGIN_USER_MESSAGE = "LOGIN_USER_MESSAGE";
 }

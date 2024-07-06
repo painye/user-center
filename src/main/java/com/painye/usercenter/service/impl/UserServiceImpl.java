@@ -6,9 +6,13 @@ import com.painye.usercenter.model.domain.User;
 import com.painye.usercenter.service.UserService;
 import com.painye.usercenter.mapper.UserMapper;
 import jakarta.annotation.Resource;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -30,6 +34,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Resource
     private UserMapper userMapper;
+    @Qualifier("httpServletRequest")
+    @Autowired
+    private ServletRequest httpServletRequest;
 
     @Override
     public Long userRegister(String userAccount, String userPassword, String checkPassword) throws Exception {
@@ -74,7 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public User doLogin(String userAccount, String userPassword) throws Exception {
+    public User doLogin(String userAccount, String userPassword, HttpServletRequest httpServletRequest) throws Exception {
 
         //1. 校验用户的账户、密码是否符合要求
         //  a. 非空
@@ -103,7 +110,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (user == null) {
             throw new Exception("没有匹配的账号和密码！！！");
         }
-        return user.toSafetyUser();
+        User safetyUser = user.toSafetyUser();
+        
+        //4、将用户登录信息保存在session中
+        httpServletRequest.getSession().setAttribute(Constant.LOGIN_USER_MESSAGE, safetyUser);
+        return safetyUser;
     }
 
 }
