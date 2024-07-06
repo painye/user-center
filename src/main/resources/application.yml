@@ -2,11 +2,14 @@ spring:
   application:
     name: user-center
 
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/usercenter
     username: root
     password: 123456
+  session:
+    timeout: 86400
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
@@ -16,9 +19,13 @@ mybatis-plus:
       logic-delete-field: isDelete
       logic-not-delete-value: 0
       logic-delete-value: 1
-
 logging:
   file:
     name: spring_log.log
     path: ./logs
   config: classpath:logback-spring-dev.xml
+server:
+  port: 8081
+  reactive:
+    session:
+      timeout: 10

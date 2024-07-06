@@ -8,6 +8,7 @@ import com.painye.usercenter.mapper.UserMapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,8 +48,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new Exception("账号、密码和校验密码为空！");
         }
         //b. 账户不小于4位,c. 密码不小于8位
-        if (userAccount.length() < 4 || userPassword.length() < 8) {
-            throw new Exception("账号长度小于4位，密码不小于8位！");
+        if (userAccount.length() < 2 || userPassword.length() < 8) {
+            throw new Exception("账号长度小于2位，密码不小于8位！");
         }
         //  e. 账户不包含特殊字符
         String validPattern = "[!@#$%^&*(),.?\":{}|<>~`\\\\/\\[\\]\\-_=+]";
@@ -81,7 +83,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public User doLogin(String userAccount, String userPassword, HttpServletRequest httpServletRequest) throws Exception {
+    public User doLogin(String userAccount, String userPassword, HttpSession session) throws Exception {
 
         //1. 校验用户的账户、密码是否符合要求
         //  a. 非空
@@ -89,8 +91,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new Exception("账号、密码为空");
         }
         //b. 账户不小于4位,c. 密码不小于8位
-        if (userAccount.length() < 4 || userPassword.length() < 8) {
-            throw new Exception("账号长度小于4位，密码不小于8位！");
+        if (userAccount.length() < 2 || userPassword.length() < 8) {
+            throw new Exception("账号长度小于2位，密码不小于8位！");
         }
         //  e. 账户不包含特殊字符
         String validPattern = "[!@#$%^&*(),.?\":{}|<>~`\\\\/\\[\\]\\-_=+]";
@@ -111,12 +113,63 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new Exception("没有匹配的账号和密码！！！");
         }
         User safetyUser = user.toSafetyUser();
-        
+
         //4、将用户登录信息保存在session中
-        httpServletRequest.getSession().setAttribute(Constant.LOGIN_USER_MESSAGE, safetyUser);
+        logger.info(String.format("本次请求中的session_id:{%s}", session.getId()));
+        session.setAttribute(Constant.LOGIN_USER_MESSAGE, safetyUser);
         return safetyUser;
     }
 
+    @Override
+    public List<User> searchUser(String userAccount, HttpSession session) throws Exception {
+        //1、校验参数
+        if (StringUtils.isBlank(userAccount)) {
+            throw new Exception("用户名为空!");
+        }
+        if (userAccount.length() < 2) {
+            throw new Exception("用户名长度小于2");
+        }
+        //2、校验是否登录
+        getLoginUserRole(session);
+        //3、查询用户
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.like("userAccount", userAccount);
+        List<User> users = userMapper.selectList(queryWrapper);
+        return users;
+    }
+
+    @Override
+    public void revokeUser(Long userId, HttpSession session) throws Exception {
+        //1、校验参数
+        if (userId < 0) {
+            throw new Exception("userId < 0!");
+        }
+        //2、校验管理员权限
+        int role = getLoginUserRole(session);
+        if (role != Constant.LOGIN_ADMIN) {
+            throw new Exception("登录用户权限不足，请登录管理员");
+        }
+
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("userId", userId);
+        int i = userMapper.deleteById(userId);
+        if (i == 0) {
+            throw new Exception("注销用户出错！");
+        }
+    }
+
+    public int getLoginUserRole(HttpSession session) throws Exception{
+        logger.info(String.format("本次请求中的session_id:{%s}", session.getId()));
+        User loginUser = (User) session.getAttribute(Constant.LOGIN_USER_MESSAGE);
+        if (loginUser == null) {
+            throw new Exception("请先登录!");
+        }
+        int role =  loginUser.getUserRole();
+        if (role != Constant.LOGIN_USER && role != Constant.LOGIN_ADMIN ) {
+            throw new Exception(String.format("用户[%s]权限出错，请检查", loginUser.getUserName()));
+        }
+        return role;
+    }
 }
 
 

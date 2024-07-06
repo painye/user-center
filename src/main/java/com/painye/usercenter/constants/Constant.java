@@ -19,6 +19,11 @@ public class Constant {
     
     public static final String LOGIN_USER_MESSAGE = "LOGIN_USER_MESSAGE";
 
+    public static final int LOGIN_ADMIN = 1;
+
+    public static final int LOGIN_USER = 0;
+
+
     /**
      *响应------------------------------------------------
      */

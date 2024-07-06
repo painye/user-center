@@ -2,7 +2,9 @@ package com.painye.usercenter.service;
 
 import com.painye.usercenter.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
+import java.util.List;
 
 /**
  * @author dell
@@ -26,17 +28,43 @@ public interface UserService extends IService<User> {
 
 
     /**
-     * 用户登录：
-     * 1、校验参数
-     * 2、查库
-     * 3、信息脱敏
-     * 4、将登录成功的用户信息保存在session之中
+     * <p>用户登录：
+     * <p>1、校验参数
+     * <p>2、查库
+     * <p>3、信息脱敏
+     * <p>4、将登录成功的用户信息保存在session之中
      *
      * @param userAccount
      * @param userPassword
-     * @param userPassword
+     * @param session
      * @return httpServletRequest
      * @throws Exception
      */
-    User doLogin(String userAccount, String userPassword, HttpServletRequest httpServletRequest) throws Exception;
+    User doLogin(String userAccount, String userPassword, HttpSession session) throws Exception;
+
+    /**
+     * <p>用户查询
+     * 1、校验参数
+     * 2、检查权限
+     * 3、查库
+     *
+     * @param userAccount
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    List<User> searchUser(String userAccount, HttpSession session) throws Exception;
+
+    /**
+     * <p>用户查询
+     * 1、校验参数
+     * 2、检查权限
+     * 3、删除用户数据
+     *
+     * @param userId
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    void revokeUser(Long userId, HttpSession session) throws Exception;
 }
