@@ -151,11 +151,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
 
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("userId", userId);
+        queryWrapper.eq("id", userId);
         int i = userMapper.deleteById(userId);
         if (i == 0) {
             throw new Exception("注销用户出错！");
         }
+    }
+
+    @Override
+    public User getCurrentUser(HttpSession session) throws Exception {
+        User user = new User();
+        User loginUser = (User) session.getAttribute(Constant.LOGIN_USER_MESSAGE);
+        if (loginUser == null) {
+            throw new Exception("当前没有登录用户");
+        }
+        Long id = loginUser.getId();
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("id", id);
+        user = userMapper.selectOne(queryWrapper);
+        if (user == null) {
+            throw new Exception("{"+id+"}用户信息不存在");
+        }
+        return user.toSafetyUser();
     }
 
     public int getLoginUserRole(HttpSession session) throws Exception{

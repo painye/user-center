@@ -9,6 +9,7 @@ import com.painye.usercenter.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.coyote.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -54,10 +55,9 @@ public class UserController {
 
     @PostMapping("/login")
     public UserResponse userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpSession session) {
-        User user = null;
         UserResponse userResponse = new UserResponse();
         try {
-            user = userService.doLogin(userLoginRequest.getUserAccount(), userLoginRequest.getUserPassword(), session);
+            User user = userService.doLogin(userLoginRequest.getUserAccount(), userLoginRequest.getUserPassword(), session);
             userResponse.setResultStatus(Constant.RESULT_STATUS_SUCCESS);
             userResponse.setResultMessage("用户登录成功！");
             Map<String, User> result = new HashMap<>();
@@ -102,6 +102,26 @@ public class UserController {
             log.error("用户注销失败：" + e.getMessage(), e);
         }
         return userResponse;
+    }
+
+
+    @GetMapping("/current")
+    public User getCurrentUser(HttpSession session){
+        UserResponse userResponse = new UserResponse();
+        User user = null;
+        try {
+            user = userService.getCurrentUser(session);
+            userResponse.setResultStatus(Constant.RESULT_STATUS_SUCCESS);
+            userResponse.setResultMessage("登录用户获取成功！");
+            Map<String, User> result = new HashMap<>();
+            result.put("user", user);
+            userResponse.setBody(result);
+        } catch (Exception e) {
+            userResponse.setResultStatus(Constant.RESULT_STATUS_FAIL);
+            userResponse.setResultMessage("登录用户获取失败：" + e.getMessage());
+            log.error("登录用户获取失败：" + e.getMessage(), e);
+        }
+        return user;
     }
 
 

@@ -67,4 +67,12 @@ public interface UserService extends IService<User> {
      * @throws Exception
      */
     void revokeUser(Long userId, HttpSession session) throws Exception;
+
+    /**
+     * 获取当前登录用户的信息
+     * @param session
+     * @return
+     * @throws Exception
+     */
+    User getCurrentUser(HttpSession session) throws Exception;
 }
