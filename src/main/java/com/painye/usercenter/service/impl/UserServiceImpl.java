@@ -175,6 +175,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return user.toSafetyUser();
     }
 
+    @Override
+    public List<User> searchAll() throws Exception {
+        List<User> userList = null;
+        userList = userMapper.selectList(null);
+        return userList;
+    }
+
     public int getLoginUserRole(HttpSession session) throws Exception{
         logger.info(String.format("本次请求中的session_id:{%s}", session.getId()));
         User loginUser = (User) session.getAttribute(Constant.LOGIN_USER_MESSAGE);

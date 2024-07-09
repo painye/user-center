@@ -124,5 +124,23 @@ public class UserController {
         return user;
     }
 
+    @GetMapping("/searchAll")
+    public List<User> searchAll(){
+        UserResponse userResponse = new UserResponse();
+        List<User> users = null;
+        try {
+            users = userService.searchAll();
+            userResponse.setResultStatus(Constant.RESULT_STATUS_SUCCESS);
+            userResponse.setResultMessage("查询所有用户成功！");
+            Map<String, List<User>> result = new HashMap<>();
+            result.put("user", users);
+        } catch (Exception e) {
+            userResponse.setResultStatus(Constant.RESULT_STATUS_FAIL);
+            userResponse.setResultMessage("查询所有用户失败：" + e.getMessage());
+            log.error("查询所有用户失败：" + e.getMessage(), e);
+        }
+        return users;
+    }
+
 
 }

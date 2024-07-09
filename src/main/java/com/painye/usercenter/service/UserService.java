@@ -70,9 +70,18 @@ public interface UserService extends IService<User> {
 
     /**
      * 获取当前登录用户的信息
+     *
      * @param session
      * @return
      * @throws Exception
      */
     User getCurrentUser(HttpSession session) throws Exception;
+
+    /**
+     * 获取所有未被删除的用户
+     *
+     * @return
+     * @throws Exception
+     */
+    List<User> searchAll() throws Exception;
 }
