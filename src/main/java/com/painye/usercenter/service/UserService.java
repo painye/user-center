@@ -84,4 +84,12 @@ public interface UserService extends IService<User> {
      * @throws Exception
      */
     List<User> searchAll() throws Exception;
+
+    /**
+     * 注销登录的用户
+     *
+     * @param session
+     * @return
+     */
+    boolean logOut(HttpSession session);
 }

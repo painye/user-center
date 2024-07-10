@@ -142,5 +142,10 @@ public class UserController {
         return users;
     }
 
+    @GetMapping("/logout")
+    public boolean logOut(HttpSession session) {
+        return userService.logOut(session);
+    }
+
 
 }

@@ -182,6 +182,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return userList;
     }
 
+    @Override
+    public boolean logOut(HttpSession session) {
+        session.removeAttribute(Constant.LOGIN_USER_MESSAGE);
+        return true;
+    }
+
     public int getLoginUserRole(HttpSession session) throws Exception{
         logger.info(String.format("本次请求中的session_id:{%s}", session.getId()));
         User loginUser = (User) session.getAttribute(Constant.LOGIN_USER_MESSAGE);
