@@ -91,5 +91,5 @@ public interface UserService extends IService<User> {
      * @param session
      * @return
      */
-    boolean logOut(HttpSession session);
+    Boolean logOut(HttpSession session);
 }
